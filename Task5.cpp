@@ -2,83 +2,65 @@
 using namespace std;
 
 int main() {
-	//rows are students,and cols are subjects
-	int rows, cols;
-	
-	//reading the number of students and subjects
-	cout << "Enter the number of Students: ";
-	cin >> rows;
-	cout << "Enter the number of Subjects: ";
-	cin >> cols;
+    int n;
 
-	//validating rows and columns
-	if (rows <= 0 || cols <= 0){
-		cout << "Error";
-		return 0;
-	}
+    //prompting the user for number of marks originally
+    cout << "Enter number of marks: ";
+    cin >> n;
 
-	//creating "rows" number of pointers and then for each row, creating "cols" integers
-	int** marks = new int* [rows];
-	for (int r = 0; r < rows; r++) {
-		marks[r] = new int[cols];
-	}
+    //validating n
+    if (n < 1 || n > 10)
+    {
+        cout << "Invalid n";
+        return 0;
+    }
 
-	//reading the values for each row and its each column
-	for (int r = 0; r < rows; r++){
-		cout << "----Student " << r + 1 << " ----;\n";
-		for (int c = 0; c < cols; c++){
-			cout << "Enter marks for subject " << c + 1 << " :";
-			cin >> *(*(marks + r) + c);
-			cout << "\n";
-		}
-	}
+    //allocating original block of memory
+    int* marks = new int[n];
 
-	//displaying the matrix
-	for (int r = 0; r < rows; r++) {
-		for (int c = 0; c < cols; c++) {
-			cout << *(*(marks + r) + c) << " ";
-		}
-		cout << endl;
-	}
+    //reading original marks
+    cout << "Enter " << n << " marks: ";
+    for (int i = 0; i < n; i++)
+    {
+        cin >> *(marks + i);
+    }
 
-	int highest_total=0;
-	int high_achiever=0;
+    //allocating new block of memory with one extra space
+    int* new_marks = new int[n + 1];
 
-	//calculating totals for each student
-	for (int r = 0; r < rows; r++){
-		int total = 0;
-		for (int c = 0; c < cols; c++){
-			total += *(*(marks + r) + c);
-		}
-		cout << "Student " << r + 1 << " total: " << total << endl;
+    //copying old marks into new block
+    for (int i = 0; i < n; i++)
+    {
+        *(new_marks + i) = *(marks + i);
+    }
 
-		//first student's total becomes the initial highest
-		if (r == 0) {
-			highest_total = total;
-			high_achiever = r + 1;
-		}
+    //reading the new student's mark
+    cout << "Enter new mark: ";
+    cin >> *(new_marks + n);
 
-		//only update when the new total is greater
-		else if (total > highest_total){
-			highest_total = total;
-			high_achiever = r + 1;
-		}
-	}
+    //releasing old block of memory
+    delete[] marks;
 
-	cout << "Top student: " << high_achiever << endl;
-	cout << "Highest total: " << highest_total << endl;
+    //making marks point to the new block ie new_marks
+    marks = new_marks;
 
-	//freeing the memory occupied by the rows "students"
-	for (int r = 0; r < rows; r++)
-	{
-		delete[] marks[r];
-	}
+    //increasing n
+    n++;
 
-	//freeing the memory occupied by the array of row pointers "subjects"
-	delete[] marks;
+    //displaying updated marks
+    cout << "Updated marks: ";
+    for (int i = 0; i < n; i++)
+    {
+        cout << *(marks + i) << " ";
+    }
 
-	marks = nullptr;
+    cout << endl;
 
-	return 0;
+    //releasing the final block of memory
+    delete[] marks;
 
+    //setting the pointer to null
+    marks = nullptr;
+
+    return 0;
 }
